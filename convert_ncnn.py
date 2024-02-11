@@ -16,6 +16,15 @@ from ZeroQ.distill_data import getDistilData
 from improve_dfq import update_scale, transform_quant_layer, set_scale, update_quant_range, set_update_stat
 
 def get_argument():
+    """
+    This is an Argument Parser for Named Arguments and returns the parsed argument
+    as a tuple of key-value pairs based on their corresponding values
+
+    Returns:
+        list: The output returned by this function is a parsing results as an
+        argparse Parser objects with attributed values.
+
+    """
     parser = argparse.ArgumentParser()
     parser.add_argument("--quantize", action='store_true')
     parser.add_argument("--equalize", action='store_true')
@@ -38,16 +47,48 @@ def get_argument():
 
 class ProbModel(torch.nn.Module):
     def __init__(self, model):
+        """
+        This function is implementing the constructor for a class `ProbModel`, it
+        initializes the object of the class by passing a `model` argument to the
+        parent constructor (`super().__init__()`) and stores it as an instance
+        variable `self.model`.
+
+        Args:
+            model (): The input parameter 'model' is an instance of a probability
+                model class that is being wrapped by the ProbModel class. It stores
+                the underlying probability model that will be used to make predictions
+                and perform computations.
+
+        """
         super(ProbModel, self).__init__()
         self.model = model
 
     def forward(self, x):
+        """
+        This function performs a forward pass through a neural network model by
+        first applying the model to the input 'x' and then applying a softmax
+        function to the output. The result is a probability distribution over the
+        possible outputs of the model.
+
+        Args:
+            x (): The input parameter `x` is passed through the model to return a
+                softmax result.
+
+        Returns:
+            float: The output of the function `forward` is `torch.softmax(x)`.
+
+        """
         x = self.model(x)
         x = torch.softmax(x, 1)
 
         return x
 
 def main():
+    """
+    This is a Python function that converts an existing PyTorch model into an ONNX
+    model and then quantizes it using the NCNN library.
+
+    """
     args = get_argument()
     # An instance of your model
     if args.resnet:
